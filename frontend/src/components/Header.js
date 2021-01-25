@@ -4,6 +4,7 @@ import { AppBar, Button, CssBaseline, fade, InputBase, Toolbar, Typography } fro
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -64,12 +65,14 @@ const Header = () => {
             <CssBaseline/>
             <AppBar style={{backgroundColor: '#2A273C'}} position="static">
                 <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
-                        E-Commerce App
-                    </Typography>
+                    <Link to='/' className='linkStyle'>
+                        <Typography variant="h6" className={classes.title}>
+                            E-Commerce App
+                        </Typography>
+                    </Link>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
-                        <SearchIcon />
+                            <SearchIcon />
                         </div>
                         <InputBase
                             placeholder="Search…"
@@ -82,8 +85,8 @@ const Header = () => {
                     </div>
                     <Button variant='outlined' color="inherit"> Search</Button>
                     <div className={classes.root}/>
-                    <Button startIcon={<ShoppingCartIcon/>} color="inherit">Cart</Button>
-                    <Button startIcon={<AccountCircleIcon/>} color="inherit">Login</Button>
+                    <Link to='/cart' className='linkStyle'><Button startIcon={<ShoppingCartIcon/>} color="inherit">Cart</Button></Link>
+                    <Link to='/login' className='linkStyle'><Button startIcon={<AccountCircleIcon/>} color="inherit">Login</Button></Link>
                 </Toolbar>
             </AppBar>
         </div>

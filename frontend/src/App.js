@@ -4,6 +4,7 @@ import Header from './components/Header'
 import './App.css'
 import HomeScreen from './screens/HomeScreen'
 import { Container } from '@material-ui/core'
+import ProductScreen from './screens/ProductScreen'
 
 const App = () => {
   return (
@@ -11,7 +12,8 @@ const App = () => {
       <Header/>
       <main>
         <Container>
-          <HomeScreen/>
+          <Route path='/' component={HomeScreen} exact />
+          <Route path='/product/:id' component={ProductScreen} />
         </Container>
       </main>
       <Footer/>
