@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { Button, Card, Divider, Grid, LinearProgress, List, ListItem, makeStyles, Typography } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import { Button, Card, Divider, FormControl, Grid, InputLabel, LinearProgress, List, ListItem, makeStyles, MenuItem, Select, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import Ratings from '../components/Ratings'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,8 +15,9 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const ProductScreen = ({ match }) => {
+const ProductScreen = ({ match, history }) => {
     const classes = useStyles()
+    const [qty, setQty] = useState(1)
     
     const dispatch = useDispatch()
 
@@ -26,6 +27,10 @@ const ProductScreen = ({ match }) => {
     useEffect(() => {
         dispatch(listProductDetails(match.params.id))
     }, [match, dispatch])
+
+    const addToCartHandler = () => {
+        history.push(`/cart/${match.params.id}?qty=${qty}`)
+    }
 
     return (
         <>
@@ -81,8 +86,30 @@ const ProductScreen = ({ match }) => {
                                 </Grid>
                             </ListItem>
                             <Divider/>
+                            {product.countInStock > 0 && (
+                                <ListItem>
+                                    <Grid item xs={6}>
+                                        Qty:
+                                    </Grid>
+                                    <Grid item xs={6}>
+                                        <FormControl fullWidth size='small'>
+                                            <Select
+                                                value={qty}
+                                                onChange={(e) => setQty(e.target.value)}
+                                            >
+                                                {[...Array(product.countInStock).keys()].map(x => (
+                                                    <MenuItem key={x + 1} value={x + 1}>
+                                                        {x + 1}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                </ListItem>
+                            )}
                             <ListItem>
                                 <Button 
+                                    onClick={addToCartHandler}
                                     classes={{ disabled: classes.disabledButton}} 
                                     style={{ backgroundColor: '#393836', color: '#fff'}} 
                                     fullWidth 
