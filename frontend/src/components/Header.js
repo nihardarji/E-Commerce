@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Button, CssBaseline, fade, InputBase, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Button, CssBaseline, fade, InputBase, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import { logout } from '../actions/userActions'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -58,7 +61,27 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 const Header = () => {
-    const classes = useStyles();
+    const classes = useStyles()
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl)
+
+    const dispatch = useDispatch()
+
+    const userLogin = useSelector(state => state.userLogin)
+    const { userInfo } = userLogin
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    }
+    
+    const handleClose = () => {
+        setAnchorEl(null);
+    }
+
+    const logoutHandler = () => {
+        handleClose()
+        dispatch(logout())
+    }
 
     return (
         <div className={classes.root}>
@@ -86,7 +109,34 @@ const Header = () => {
                     <Button variant='outlined' color="inherit"> Search</Button>
                     <div className={classes.root}/>
                     <Link to='/cart' className='linkStyle'><Button startIcon={<ShoppingCartIcon/>} color="inherit">Cart</Button></Link>
-                    <Link to='/login' className='linkStyle'><Button startIcon={<AccountCircleIcon/>} color="inherit">Login</Button></Link>
+                    {userInfo ? 
+                        <div>
+                            <Button startIcon={<AccountCircleIcon/>} onClick={handleMenu} color="inherit" >
+                                {userInfo.name} <ArrowDropDownIcon />
+                            </Button>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={open}
+                                onClose={handleClose}
+                            >
+                                <MenuItem onClick={handleClose}>
+                                    <Link to='/profile' className='linkStyle'>Profile</Link>
+                                </MenuItem>
+                                <MenuItem onClick={logoutHandler}>Logout</MenuItem>
+                            </Menu>
+                        </div>
+                        : 
+                        <Link to='/login' className='linkStyle'><Button startIcon={<AccountCircleIcon/>} color="inherit">Login</Button></Link>}
                 </Toolbar>
             </AppBar>
         </div>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { CircularProgress, Grid, LinearProgress } from '@material-ui/core'
+import { Grid, LinearProgress } from '@material-ui/core'
 import Product from '../components/Product'
 import { useDispatch, useSelector } from 'react-redux'
 import { listProducts } from '../actions/productActions'

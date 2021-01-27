@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Card, Divider, FormControl, Grid, InputLabel, LinearProgress, List, ListItem, makeStyles, MenuItem, Select, Typography } from '@material-ui/core'
+import { Button, Card, Divider, FormControl, Grid, LinearProgress, List, ListItem, makeStyles, MenuItem, Select, Typography } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import Ratings from '../components/Ratings'
 import { useDispatch, useSelector } from 'react-redux'
