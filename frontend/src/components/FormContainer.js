@@ -5,7 +5,7 @@ const FormContainer = ({ children }) => {
     return (
         <Container>
             <Grid container spacing={2} justify='center'>
-                <Grid xs={12} md={6}>
+                <Grid item xs={12} md={6}>
                     {children}
                 </Grid>
             </Grid>
