@@ -1,30 +1,61 @@
 import { Box, Card, Divider, Grid, LinearProgress, List, ListItem } from '@material-ui/core'
-import React, { useEffect } from 'react'
+import axios from 'axios'
+import { PayPalButton } from 'react-paypal-button-v2'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
-import { getOrderDetails } from '../actions/orderActions'
+import { getOrderDetails, payOrder } from '../actions/orderActions'
+import { ORDER_PAY_RESET } from '../constants/orderConstants'
 
 const OrderScreen = ({ match }) => {
     const orderId = match.params.id
+
+    const [sdkReady, setSdkReady] = useState(false)
 
     const dispatch = useDispatch()
 
     const orderDetails = useSelector(state => state.orderDetails)
     const { order, loading, error } = orderDetails
 
+    const orderPay = useSelector(state => state.orderPay)
+    const { loading: loadingPay, success: successPay } = orderPay
+
     useEffect(() => {
-        if(!order || order._id !== orderId){
-            dispatch(getOrderDetails(orderId))
+        const addPayPalScript = async () => {
+            const { data: clientId } = await axios.get('/api/config/paypal')
+            const script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
+            script.async = true
+            script.onload = () => {
+                setSdkReady(true)
+            }
+            document.body.appendChild(script)
         }
-    }, [order, dispatch, orderId])
+        if(!order || successPay || order._id !== orderId){
+            dispatch({ type: ORDER_PAY_RESET })
+            dispatch(getOrderDetails(orderId))
+        } else if(!order.isPaid){
+            if(!window.paypal){
+                addPayPalScript()
+            } else {
+                setSdkReady(true)
+            }
+        }
+    }, [order, dispatch, orderId, successPay])
+
+    const successPaymentHandler = (paymentResult) => {
+        console.log(paymentResult)
+        dispatch(payOrder(orderId, paymentResult))
+    }
 
     return (
         loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : 
         <>
             <h1> Order {order._id.toUpperCase()}</h1>
             <Grid container spacing={2}>
-                <Grid item md={8}>
+                <Grid item xs={12} md={8}>
                     <List>
                         <ListItem>
                             <Box component='div' style={{width: '100%'}} >
@@ -84,7 +115,7 @@ const OrderScreen = ({ match }) => {
                         </ListItem>
                     </List>
                 </Grid>
-                <Grid item md={4}>
+                <Grid item xs={12} md={4}>
                     <Card>
                         <List>
                             <ListItem>
@@ -119,6 +150,23 @@ const OrderScreen = ({ match }) => {
                                     <Grid item xs>${order.totalPrice}</Grid>
                                 </Grid>
                             </ListItem>
+
+                            {!order.isPaid && (
+                                <ListItem>
+                                    <div style={{width: '100%'}}>
+                                        {loadingPay && <LinearProgress/>}
+                                        {!sdkReady ? 
+                                            <LinearProgress/> : (
+                                            
+                                            <PayPalButton
+                                                amount={order.totalPrice}
+                                                onSuccess={successPaymentHandler}
+                                            />
+                                            
+                                        )}
+                                    </div>
+                                </ListItem>
+                            )}
 
                         </List>
                     </Card>

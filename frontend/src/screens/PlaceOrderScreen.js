@@ -55,7 +55,7 @@ const PlaceOrderScreen = ({ history }) => {
         <>
             <FormContainer><CheckoutSteps step1 step2 step3 step4 /></FormContainer>
             <Grid container spacing={2}>
-                <Grid item md={8}>
+                <Grid item xs={12} md={8}>
                     <List>
                         <ListItem>
                             <Box component='div'>
@@ -109,7 +109,7 @@ const PlaceOrderScreen = ({ history }) => {
                         </ListItem>
                     </List>
                 </Grid>
-                <Grid item md={4}>
+                <Grid item xs={12} md={4}>
                     <Card>
                         <List>
                             <ListItem>

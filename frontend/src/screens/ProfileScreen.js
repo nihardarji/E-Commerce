@@ -1,8 +1,11 @@
-import { Box, Button, Grid, InputLabel, LinearProgress, makeStyles, TextField } from '@material-ui/core'
+import { Box, Button, Grid, InputLabel, LinearProgress, makeStyles, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getUserDetails, updateUserProfile } from '../actions/userActions'
+import { listMyOrders } from '../actions/orderActions'
 import Message from '../components/Message'
+import CloseIcon from '@material-ui/icons/Close'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     textfield: {
@@ -31,12 +34,16 @@ const ProfileScreen = ({ location, history }) => {
     const userUpdateProfile = useSelector(state => state.userUpdateProfile)
     const { success } = userUpdateProfile
 
+    const orderListMy = useSelector(state => state.orderListMy)
+    const { loading: loadingOrders, error: errorOrders, orders } = orderListMy
+
     useEffect(() => {
         if(!userInfo) {
             history.push('/login')
         } else {
             if(!user.name) {
                 dispatch(getUserDetails('profile'))
+                dispatch(listMyOrders())
             } else {
                 setName(user.name)
                 setEmail(user.email)
@@ -55,7 +62,7 @@ const ProfileScreen = ({ location, history }) => {
 
     return (
         <Grid container spacing={2}>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={3}>
                 <h2>User Profile</h2>
                 {message && <Message severity='error'>{message}</Message>}
                 {error && <Message severity='error'>{error}</Message>}
@@ -83,8 +90,38 @@ const ProfileScreen = ({ location, history }) => {
                     </Button>
                 </form>
             </Grid>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={9}>
                 <h2>My Orders</h2>
+                {loadingOrders ? <LinearProgress/> : errorOrders ? <Message severity='error'>{errorOrders}</Message> : (
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><strong>ID</strong></TableCell>
+                                <TableCell><strong>DATE</strong></TableCell>
+                                <TableCell><strong>TOTAL</strong></TableCell>
+                                <TableCell><strong>PAID</strong></TableCell>
+                                <TableCell><strong>DELIVERED</strong></TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {orders.map(order => (
+                                <TableRow key={order._id}>
+                                    <TableCell>{order._id}</TableCell>
+                                    <TableCell>{order.createdAt.substring(0, 10)}</TableCell>
+                                    <TableCell>{order.totalPrice}</TableCell>
+                                    <TableCell>{order.isPaid ? order.paidAt.substring(0,10) : <CloseIcon style={{color:'red'}}/>}</TableCell>
+                                    <TableCell>{order.isDelivered ? order.deliveredAt.substring(0,10) : <CloseIcon style={{color:'red'}}/>}</TableCell>
+                                    <TableCell>
+                                        <Link className='linkStyle' to={`/order/${order._id}`}>
+                                            <Button variant='contained' style={{ backgroundColor: '#393836', color: '#fff'}}>Details</Button>
+                                        </Link>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table> 
+                )}
             </Grid>
         </Grid>
     )
