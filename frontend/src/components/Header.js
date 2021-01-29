@@ -129,6 +129,19 @@ const Header = () => {
                                 open={open}
                                 onClose={handleClose}
                             >
+                                {userInfo.isAdmin && (
+                                    <>
+                                        <MenuItem onClick={handleClose}>
+                                            <Link to='/admin/userlist' className='linkStyle'>Users</Link>
+                                        </MenuItem>
+                                        <MenuItem onClick={handleClose}>
+                                            <Link to='/admin/productlist' className='linkStyle'>Products</Link>
+                                        </MenuItem>
+                                        <MenuItem onClick={handleClose}>
+                                            <Link to='/admin/orderlist' className='linkStyle'>Orders</Link>
+                                        </MenuItem>
+                                    </>
+                                )}
                                 <MenuItem onClick={handleClose}>
                                     <Link to='/profile' className='linkStyle'>Profile</Link>
                                 </MenuItem>
@@ -136,7 +149,8 @@ const Header = () => {
                             </Menu>
                         </div>
                         : 
-                        <Link to='/login' className='linkStyle'><Button startIcon={<AccountCircleIcon/>} color="inherit">Login</Button></Link>}
+                        <Link to='/login' className='linkStyle'><Button startIcon={<AccountCircleIcon/>} color="inherit">Login</Button></Link>
+                    }
                 </Toolbar>
             </AppBar>
         </div>
