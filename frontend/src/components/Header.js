@@ -130,7 +130,7 @@ const Header = () => {
                                 onClose={handleClose}
                             >
                                 {userInfo.isAdmin && (
-                                    <>
+                                    <div>
                                         <MenuItem onClick={handleClose}>
                                             <Link to='/admin/userlist' className='linkStyle'>Users</Link>
                                         </MenuItem>
@@ -140,7 +140,7 @@ const Header = () => {
                                         <MenuItem onClick={handleClose}>
                                             <Link to='/admin/orderlist' className='linkStyle'>Orders</Link>
                                         </MenuItem>
-                                    </>
+                                    </div>
                                 )}
                                 <MenuItem onClick={handleClose}>
                                     <Link to='/profile' className='linkStyle'>Profile</Link>

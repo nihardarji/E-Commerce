@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { listUsers } from '../actions/userActions'
+import { deleteUser, listUsers } from '../actions/userActions'
 import { IconButton, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
 import Message from '../components/Message'
 import CloseIcon from '@material-ui/icons/Close'
@@ -18,6 +18,9 @@ const UserListScreen = ({ history }) => {
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
+    const userDelete = useSelector(state => state.userDelete)
+    const { success: successDelete } = userDelete
+
     useEffect(() => {
         if(userInfo && userInfo.isAdmin){
             dispatch(listUsers())
@@ -25,10 +28,12 @@ const UserListScreen = ({ history }) => {
             history.push('/login')
         }
 
-    }, [dispatch, history])
+    }, [dispatch, history, userInfo, successDelete])
 
     const deleteHandler = (id) => {
-        console.log('delete')
+        if(window.confirm('Are you sure?')){
+            dispatch(deleteUser(id))
+        }
     }
     return (
         <>
