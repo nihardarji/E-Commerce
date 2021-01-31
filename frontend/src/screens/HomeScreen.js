@@ -4,18 +4,20 @@ import Product from '../components/Product'
 import { useDispatch, useSelector } from 'react-redux'
 import { listProducts } from '../actions/productActions'
 import Message from '../components/Message'
+import Paginate from '../components/Paginate'
 
 const HomeScreen = ({ match }) => {
     const keyword = match.params.keyword
+    const pageNumber = match.params.pageNumber || 1
 
     const dispatch = useDispatch()
 
     const productList = useSelector(state => state.productList)
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
 
     useEffect(() => {
-        dispatch(listProducts(keyword))
-    }, [dispatch, keyword])
+        dispatch(listProducts(keyword, pageNumber))
+    }, [dispatch, keyword, pageNumber])
 
     return (
         <>
@@ -25,13 +27,16 @@ const HomeScreen = ({ match }) => {
             ) : error ? (
                 <Message severity='error' >{error}</Message>
             ) : (
-            <Grid container spacing={2}>
-                {products.map(product => (
-                    <Grid item xs={12} md={4} key={product._id}>
-                        <Product product={product} />
+                <>
+                    <Grid container spacing={2}>
+                        {products.map(product => (
+                            <Grid item xs={12} md={4} key={product._id}>
+                                <Product product={product} />
+                            </Grid>
+                        ))}
                     </Grid>
-                ))}
-            </Grid>
+                    <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''} />
+                </>
             )}
         </>
     )

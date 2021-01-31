@@ -8,12 +8,15 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add';
 import { createProduct, deleteProduct, listProducts } from '../actions/productActions'
 import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
+import Paginate from '../components/Paginate'
 
 const ProductListScreen = ({ history, match }) => {
+    const pageNumber = match.params.pageNumber || 1
+
     const dispatch = useDispatch()
 
     const productList = useSelector(state => state.productList)
-    const { loading, error, products } = productList
+    const { loading, error, products, page, pages } = productList
 
     const productDelete = useSelector(state => state.productDelete)
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
@@ -32,10 +35,10 @@ const ProductListScreen = ({ history, match }) => {
         if(successCreate) {
             history.push(`/admin/product/${createdProduct._id}/edit`)
         } else {
-            dispatch(listProducts())
+            dispatch(listProducts('', pageNumber))
         }
 
-    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct])
+    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct, pageNumber])
 
     const deleteHandler = (id) => {
         if(window.confirm('Are you sure?')){
@@ -71,39 +74,42 @@ const ProductListScreen = ({ history, match }) => {
             {loadingCreate && <LinearProgress/>}
             {errorCreate && <Message severity='error'>{errorCreate}</Message>}
             {loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : (
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell><strong>ID</strong></TableCell>
-                            <TableCell><strong>NAME</strong></TableCell>
-                            <TableCell><strong>PRICE</strong></TableCell>
-                            <TableCell><strong>CATEGORY</strong></TableCell>
-                            <TableCell><strong>BRAND</strong></TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {products.map(product => (
-                            <TableRow key={product._id}>
-                                <TableCell>{product._id}</TableCell>
-                                <TableCell>{product.name}</TableCell>
-                                <TableCell>${product.price}</TableCell>
-                                <TableCell>{product.category}</TableCell>
-                                <TableCell>{product.brand}</TableCell>
-                                <TableCell>
-                                        <Link to={`/admin/product/${product._id}/edit`} className='linkStyle'>
-                                            <IconButton>
-                                                <EditIcon/>
-                                            </IconButton>
-                                        </Link>
-                                        <IconButton onClick={() => deleteHandler(product._id)}>
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                </TableCell>
+                <>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><strong>ID</strong></TableCell>
+                                <TableCell><strong>NAME</strong></TableCell>
+                                <TableCell><strong>PRICE</strong></TableCell>
+                                <TableCell><strong>CATEGORY</strong></TableCell>
+                                <TableCell><strong>BRAND</strong></TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHead>
+                        <TableBody>
+                            {products.map(product => (
+                                <TableRow key={product._id}>
+                                    <TableCell>{product._id}</TableCell>
+                                    <TableCell>{product.name}</TableCell>
+                                    <TableCell>${product.price}</TableCell>
+                                    <TableCell>{product.category}</TableCell>
+                                    <TableCell>{product.brand}</TableCell>
+                                    <TableCell>
+                                            <Link to={`/admin/product/${product._id}/edit`} className='linkStyle'>
+                                                <IconButton>
+                                                    <EditIcon/>
+                                                </IconButton>
+                                            </Link>
+                                            <IconButton onClick={() => deleteHandler(product._id)}>
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                    <Paginate pages={pages} page={page} isAdmin={true} />
+                </>
             )}  
         </>
     )
