@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listProducts } from '../actions/productActions'
 import Message from '../components/Message'
 
-const HomeScreen = () => {
+const HomeScreen = ({ match }) => {
+    const keyword = match.params.keyword
 
     const dispatch = useDispatch()
 
@@ -13,8 +14,8 @@ const HomeScreen = () => {
     const { loading, error, products } = productList
 
     useEffect(() => {
-        dispatch(listProducts())
-    }, [dispatch])
+        dispatch(listProducts(keyword))
+    }, [dispatch, keyword])
 
     return (
         <>
