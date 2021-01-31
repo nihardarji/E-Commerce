@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
 import AddIcon from '@material-ui/icons/Add';
-import { deleteProduct, listProducts } from '../actions/productActions'
+import { createProduct, deleteProduct, listProducts } from '../actions/productActions'
+import { PRODUCT_CREATE_RESET } from '../constants/productConstants'
 
 const ProductListScreen = ({ history, match }) => {
     const dispatch = useDispatch()
@@ -17,23 +18,35 @@ const ProductListScreen = ({ history, match }) => {
     const productDelete = useSelector(state => state.productDelete)
     const { loading: loadingDelete, error: errorDelete, success: successDelete } = productDelete
 
+    const productCreate = useSelector(state => state.productCreate)
+    const { loading: loadingCreate, error: errorCreate, success: successCreate, product: createdProduct } = productCreate
+
     const userLogin = useSelector(state => state.userLogin)
     const { userInfo } = userLogin
 
     useEffect(() => {
-        if(userInfo && userInfo.isAdmin){
-            dispatch(listProducts())
-        } else {
+        dispatch({ type: PRODUCT_CREATE_RESET })
+        if(!userInfo.isAdmin){
             history.push('/login')
+        } 
+        if(successCreate) {
+            history.push(`/admin/product/${createdProduct._id}/edit`)
+        } else {
+            dispatch(listProducts())
         }
 
-    }, [dispatch, history, userInfo, successDelete])
+    }, [dispatch, history, userInfo, successDelete, successCreate, createdProduct])
 
     const deleteHandler = (id) => {
         if(window.confirm('Are you sure?')){
             dispatch(deleteProduct(id))
         }
     }
+
+    const createProductHandler = () => {
+        dispatch(createProduct())
+    }
+
     return (
         <>
             <Grid container spacing={2}>
@@ -44,6 +57,7 @@ const ProductListScreen = ({ history, match }) => {
                     <Grid>
                         <Button 
                             variant='contained' 
+                            onClick={createProductHandler}
                             style={{ backgroundColor: '#393836', color: '#fff'}} 
                             startIcon={<AddIcon/>}
                         >
@@ -54,6 +68,8 @@ const ProductListScreen = ({ history, match }) => {
             </Grid>
             {loadingDelete && <LinearProgress/>}
             {errorDelete && <Message severity='error'>{errorDelete}</Message>}
+            {loadingCreate && <LinearProgress/>}
+            {errorCreate && <Message severity='error'>{errorCreate}</Message>}
             {loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : (
                 <Table>
                     <TableHead>

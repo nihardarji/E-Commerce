@@ -55,7 +55,7 @@ const UserEditScreen = ({ match, history }) => {
         <>
             <Box my={2}><Link to='/admin/userlist' className='linkStyle'><Button variant='outlined'>Go Back</Button></Link></Box>
             <FormContainer>
-                <h1>Edit user</h1>
+                <h1>Edit User</h1>
                 {loadingUpdate && <LinearProgress/>}
                 {errorUpdate && <Message severity='error'>{errorUpdate}</Message>}
                 {loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : (
