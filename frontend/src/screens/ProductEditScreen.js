@@ -1,5 +1,6 @@
-import { Box, Button, InputLabel, LinearProgress, makeStyles, TextField } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { Box, Button, InputLabel, LinearProgress, makeStyles, TextField } from '@material-ui/core'
 import FormContainer from '../components/FormContainer'
 import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +27,7 @@ const ProductEditScreen = ({ match, history }) => {
     const [category, setCategory] = useState('')
     const [countInStock, setCountInStock] = useState(0)
     const [description, setDescription] = useState('')
+    const [uploading, setUploading] = useState(false)
 
     const dispatch = useDispatch()
 
@@ -53,6 +55,27 @@ const ProductEditScreen = ({ match, history }) => {
             }
         }
     }, [product, productId, dispatch, history, successUpdate])
+
+    const uploadFileHandler = async (e) => {
+        const file = e.target.files[0]
+        const formData = new FormData()
+        formData.append('image', file)
+        setUploading(true)
+        try {
+            const config= {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }
+
+            const { data } = await axios.post('/api/upload', formData, config)
+            setImage(data)
+            setUploading(false)
+        } catch (error) {
+            console.error(error)
+            setUploading(true)
+        }
+    }
 
     const submitHandler = (e) => {
         e.preventDefault()
@@ -88,6 +111,8 @@ const ProductEditScreen = ({ match, history }) => {
                     <Box py={1}>
                         <InputLabel>Image</InputLabel>
                         <TextField className={classes.textfield} fullWidth variant='outlined' type='text' placeholder='Enter image url' value={image} onChange={(e) => setImage(e.target.value)} />
+                        <TextField className={classes.textfield} fullWidth variant='outlined' type='file' placeholder='Enter image url' onChange={uploadFileHandler} />
+                        {uploading && <LinearProgress/>}
                     </Box>
                     <Box py={1}>
                         <InputLabel>Brand</InputLabel>
