@@ -49,7 +49,7 @@ const Header = () => {
     return (
         <div className={classes.root}>
             <CssBaseline/>
-            <AppBar style={{backgroundColor: '#2A273C'}} position="static">
+            <AppBar style={{backgroundColor: '#414758'}} position="static">
                 <Toolbar>
                     <Link to='/' className='linkStyle'>
                         <Typography variant="h6" className={classes.title}>

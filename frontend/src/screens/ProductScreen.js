@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createProductReview, listProductDetails } from '../actions/productActions'
 import Message from '../components/Message'
 import { PRODUCT_CREATE_REVIEW_RESET } from '../constants/productConstants'
+import Meta from '../components/Meta'
 
 const useStyles = makeStyles(theme => ({
     grid: {
@@ -74,6 +75,7 @@ const ProductScreen = ({ match, history }) => {
                 <Message severity='error' /> 
             : (
                 <>
+                    <Meta title={product.name} />
                     <Grid className={classes.grid} container spacing={2}>
                         <Grid item xs={12} md={6}>
                             <img src={product.image} alt={product.name} width='100%' height='auto' />

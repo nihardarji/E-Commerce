@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react'
-import { Grid, LinearProgress } from '@material-ui/core'
+import { Button, Grid, LinearProgress } from '@material-ui/core'
 import Product from '../components/Product'
 import { useDispatch, useSelector } from 'react-redux'
 import { listProducts } from '../actions/productActions'
 import Message from '../components/Message'
 import Paginate from '../components/Paginate'
+import ProductCarousel from '../components/ProductCarousel'
+import Meta from '../components/Meta'
+import { Link } from 'react-router-dom'
 
 const HomeScreen = ({ match }) => {
     const keyword = match.params.keyword
@@ -20,7 +23,14 @@ const HomeScreen = ({ match }) => {
     }, [dispatch, keyword, pageNumber])
 
     return (
-        <>
+        <>  
+            <Meta />
+            {!keyword ? <ProductCarousel /> 
+            : 
+                <Link to='/' className='linkStyle'>
+                    <Button variant='outlined'>Go Back</Button>
+                </Link>
+            }
             <h1>Latest Products</h1>
             {loading ? (
                 <LinearProgress />

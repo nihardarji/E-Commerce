@@ -53,6 +53,7 @@ const SearchBox = ({ history }) => {
         } else {
             history.push('/')
         }
+        setKeyword('')
     }
 
     return (
