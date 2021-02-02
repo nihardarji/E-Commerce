@@ -60,7 +60,6 @@ const OrderScreen = ({ match, history }) => {
     }
 
     const successPaymentHandler = (paymentResult) => {
-        console.log(paymentResult)
         dispatch(payOrder(orderId, paymentResult))
     }
 
@@ -165,7 +164,7 @@ const OrderScreen = ({ match, history }) => {
                                 </Grid>
                             </ListItem>
 
-                            {!order.isPaid && (
+                            {userInfo && order.user && userInfo._id === order.user._id && !order.isPaid && (
                                 <ListItem>
                                     <div style={{width: '100%'}}>
                                         {loadingPay && <LinearProgress/>}
