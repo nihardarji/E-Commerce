@@ -6,6 +6,7 @@ import FormContainer from '../components/FormContainer'
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
 import { createOrder } from '../actions/orderActions'
+import { CART_RESET } from '../constants/cartConstants'
 
 const useStyles = makeStyles({
     disabledButton:{
@@ -49,6 +50,8 @@ const PlaceOrderScreen = ({ history }) => {
             taxPrice: cart.taxPrice,
             totalPrice: cart.totalPrice
         }))
+        localStorage.removeItem('cartItems')
+        dispatch({ type: CART_RESET })
     }
 
     return (

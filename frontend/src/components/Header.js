@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
         },
     }
 }))
-const Header = () => {
+const Header = ({ history }) => {
     const classes = useStyles()
     const [anchorEl, setAnchorEl] = useState(null)
     const open = Boolean(anchorEl)
@@ -44,6 +44,7 @@ const Header = () => {
     const logoutHandler = () => {
         handleClose()
         dispatch(logout())
+        history.push('/login')
     }
 
     return (
