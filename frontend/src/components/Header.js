@@ -82,20 +82,20 @@ const Header = ({ history }) => {
                             >
                                 {userInfo.isAdmin && (
                                     <div>
-                                        <MenuItem onClick={handleClose}>
-                                            <Link to='/admin/userlist' className='linkStyle'>Users</Link>
-                                        </MenuItem>
-                                        <MenuItem onClick={handleClose}>
-                                            <Link to='/admin/productlist' className='linkStyle'>Products</Link>
-                                        </MenuItem>
-                                        <MenuItem onClick={handleClose}>
-                                            <Link to='/admin/orderlist' className='linkStyle'>Orders</Link>
-                                        </MenuItem>
+                                        <Link to='/admin/userlist' className='linkStyle'>
+                                            <MenuItem onClick={handleClose}>Users</MenuItem>
+                                        </Link>
+                                        <Link to='/admin/productlist' className='linkStyle'>
+                                            <MenuItem onClick={handleClose}>Products</MenuItem>
+                                        </Link>
+                                        <Link to='/admin/orderlist' className='linkStyle'>
+                                            <MenuItem onClick={handleClose}>Orders</MenuItem>
+                                        </Link>
                                     </div>
                                 )}
-                                <MenuItem onClick={handleClose}>
-                                    <Link to='/profile' className='linkStyle'>Profile</Link>
-                                </MenuItem>
+                                <Link to='/profile' className='linkStyle'>
+                                    <MenuItem onClick={handleClose}>Profile</MenuItem>
+                                </Link>
                                 <MenuItem onClick={logoutHandler}>Logout</MenuItem>
                             </Menu>
                         </div>

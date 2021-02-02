@@ -1,4 +1,5 @@
 import asyncHandler from 'express-async-handler'
+import Order from '../models/orderModel.js'
 import User from '../models/userModel.js'
 import generateToken from '../utils/generateToken.js'
 
@@ -122,6 +123,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
     if(user) {
         await user.remove()
+        await Order.deleteMany({ user: user._id })
         res.json({ message: 'User removed' })
     } else {
         res.status(404)
