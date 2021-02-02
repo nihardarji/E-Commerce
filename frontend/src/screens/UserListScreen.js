@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteUser, listUsers } from '../actions/userActions'
-import { IconButton, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
+import { IconButton, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import Message from '../components/Message'
 import CloseIcon from '@material-ui/icons/Close'
 import CheckIcon from '@material-ui/icons/Check'
@@ -37,40 +37,42 @@ const UserListScreen = ({ history }) => {
     }
     return (
         <>
-          <h1>Users</h1>
-          {loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : (
-              <Table>
-                  <TableHead>
-                      <TableRow>
-                          <TableCell><strong>ID</strong></TableCell>
-                          <TableCell><strong>NAME</strong></TableCell>
-                          <TableCell><strong>EMAIL</strong></TableCell>
-                          <TableCell><strong>ADMIN</strong></TableCell>
-                          <TableCell></TableCell>
-                      </TableRow>
-                  </TableHead>
-                  <TableBody>
-                      {users.map(user => (
-                          <TableRow key={user._id}>
-                              <TableCell>{user._id}</TableCell>
-                              <TableCell>{user.name}</TableCell>
-                              <TableCell><a className='linkStyle' href={`mailto:${user.email}`}>{user.email}</a></TableCell>
-                              <TableCell>{user.isAdmin ? <CheckIcon style={{color:'green'}}/> : <CloseIcon style={{color:'red'}}/>}</TableCell>
-                              <TableCell>
-                                    <Link to={`/admin/user/${user._id}/edit`} className='linkStyle'>
-                                        <IconButton>
-                                            <EditIcon/>
-                                        </IconButton>
-                                    </Link>
-                                    <IconButton onClick={() => deleteHandler(user._id)}>
-                                        <DeleteIcon/>
-                                    </IconButton>
-                              </TableCell>
-                          </TableRow>
-                      ))}
-                  </TableBody>
-              </Table>
-          )}  
+            <h1>Users</h1>
+            {loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : (
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell><strong>ID</strong></TableCell>
+                                <TableCell><strong>NAME</strong></TableCell>
+                                <TableCell><strong>EMAIL</strong></TableCell>
+                                <TableCell><strong>ADMIN</strong></TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {users.map(user => (
+                                <TableRow key={user._id}>
+                                    <TableCell>{user._id}</TableCell>
+                                    <TableCell>{user.name}</TableCell>
+                                    <TableCell><a className='linkStyle' href={`mailto:${user.email}`}>{user.email}</a></TableCell>
+                                    <TableCell>{user.isAdmin ? <CheckIcon style={{color:'green'}}/> : <CloseIcon style={{color:'red'}}/>}</TableCell>
+                                    <TableCell>
+                                            <Link to={`/admin/user/${user._id}/edit`} className='linkStyle'>
+                                                <IconButton>
+                                                    <EditIcon/>
+                                                </IconButton>
+                                            </Link>
+                                            <IconButton onClick={() => deleteHandler(user._id)}>
+                                                <DeleteIcon/>
+                                            </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            )}  
         </>
     )
 }

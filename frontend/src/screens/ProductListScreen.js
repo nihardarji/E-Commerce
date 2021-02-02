@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Grid, IconButton, LinearProgress, Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core'
+import { Button, Grid, IconButton, LinearProgress, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import Message from '../components/Message'
 import { Link } from 'react-router-dom'
 import EditIcon from '@material-ui/icons/Edit'
@@ -75,39 +75,41 @@ const ProductListScreen = ({ history, match }) => {
             {errorCreate && <Message severity='error'>{errorCreate}</Message>}
             {loading ? <LinearProgress/> : error ? <Message severity='error'>{error}</Message> : (
                 <>
-                    <Table>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell><strong>ID</strong></TableCell>
-                                <TableCell><strong>NAME</strong></TableCell>
-                                <TableCell><strong>PRICE</strong></TableCell>
-                                <TableCell><strong>CATEGORY</strong></TableCell>
-                                <TableCell><strong>BRAND</strong></TableCell>
-                                <TableCell></TableCell>
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {products.map(product => (
-                                <TableRow key={product._id}>
-                                    <TableCell>{product._id}</TableCell>
-                                    <TableCell>{product.name}</TableCell>
-                                    <TableCell>${product.price}</TableCell>
-                                    <TableCell>{product.category}</TableCell>
-                                    <TableCell>{product.brand}</TableCell>
-                                    <TableCell>
-                                            <Link to={`/admin/product/${product._id}/edit`} className='linkStyle'>
-                                                <IconButton>
-                                                    <EditIcon/>
-                                                </IconButton>
-                                            </Link>
-                                            <IconButton onClick={() => deleteHandler(product._id)}>
-                                                <DeleteIcon/>
-                                            </IconButton>
-                                    </TableCell>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell><strong>ID</strong></TableCell>
+                                    <TableCell><strong>NAME</strong></TableCell>
+                                    <TableCell><strong>PRICE</strong></TableCell>
+                                    <TableCell><strong>CATEGORY</strong></TableCell>
+                                    <TableCell><strong>BRAND</strong></TableCell>
+                                    <TableCell></TableCell>
                                 </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
+                            </TableHead>
+                            <TableBody>
+                                {products.map(product => (
+                                    <TableRow key={product._id}>
+                                        <TableCell>{product._id}</TableCell>
+                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell>${product.price}</TableCell>
+                                        <TableCell>{product.category}</TableCell>
+                                        <TableCell>{product.brand}</TableCell>
+                                        <TableCell>
+                                                <Link to={`/admin/product/${product._id}/edit`} className='linkStyle'>
+                                                    <IconButton>
+                                                        <EditIcon/>
+                                                    </IconButton>
+                                                </Link>
+                                                <IconButton onClick={() => deleteHandler(product._id)}>
+                                                    <DeleteIcon/>
+                                                </IconButton>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                     <Paginate pages={pages} page={page} isAdmin={true} />
                 </>
             )}  
